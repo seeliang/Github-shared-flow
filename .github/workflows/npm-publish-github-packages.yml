@@ -10,10 +10,6 @@ on:
   pull_request:
     branches:
       - main
-  workflow_call:
-    secrets:
-      NODE_AUTH_TOKEN:
-        required: true
 
 jobs:
   publish-gpr:
