@@ -36,7 +36,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "hi@sihuiliang.com" 
-      - name: Add suffix to version on PR
+      - name: Add suffix to version on PR prerelease
         if: inputs.branch != 'main' && inputs.branch != 'master'
         run: |
           BRANCH_NAME=${{ inputs.branch }}
