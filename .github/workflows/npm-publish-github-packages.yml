@@ -36,7 +36,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "hi@sihuiliang.com" 
-          echo "------------- set npmrc ---------------"
       - name: Add suffix to version on PR
         if: inputs.branch != 'main' && inputs.branch != 'master'
         run: |
