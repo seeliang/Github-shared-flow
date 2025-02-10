@@ -37,8 +37,10 @@ jobs:
       - name: Add suffix to version if not on main or master
         if: inputs.branch != 'main' && inputs.branch != 'master'
         run: |
+          BRANCH_NAME=${{ inputs.branch }}
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          npx semantic-release --branch "${{ inputs.branch }}-${COMMIT_HASH}" --prerelease
+          npm version prerelease --preid=${BRANCH_NAME}-${COMMIT_HASH}
+          npm publish
       - name: Run semantic-release
         if: inputs.branch == 'main' || inputs.branch == 'master'
         run: |
