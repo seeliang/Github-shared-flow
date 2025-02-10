@@ -32,11 +32,14 @@ jobs:
         run: npm ci
       - name: Set user
         run: |
-          git config --local user.email github@sihuiliang.com
-          git config --local user.name github-actions
-          npm config set //npm.pkg.github.com/:_authToken=${{secrets.RELEASE_TOKEN}}
-          npm config set always-auth=true
-          npm config set email=github@sihuiliang.com
+          echo "------------- set npmrc ---------------"
+          npm config set always-auth true
+          npm config set //npm.pkg.github.com/:_authToken ${{secrets.RELEASE_TOKEN}}
+          npm config set @your-compnay:registry https://npm.pkg.github.com
+          echo "---------------- cofig ----------------"
+          npm config list
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
       - name: Add suffix to version if not on main or master
         if: inputs.branch != 'main' && inputs.branch != 'master'
         run: |
@@ -48,5 +51,4 @@ jobs:
         if: inputs.branch == 'main' || inputs.branch == 'master'
         run: |
           npx semantic-release
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
+       
