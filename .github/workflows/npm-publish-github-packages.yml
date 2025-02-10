@@ -35,6 +35,8 @@ jobs:
           git config --local user.email github@sihuiliang.com
           git config --local user.name github-actions
           npm config set //npm.pkg.github.com/:_authToken=${{secrets.RELEASE_TOKEN}}
+          npm config set always-auth=true
+          npm config set email=github@sihuiliang.com
       - name: Add suffix to version if not on main or master
         if: inputs.branch != 'main' && inputs.branch != 'master'
         run: |
