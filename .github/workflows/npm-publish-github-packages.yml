@@ -35,8 +35,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "hi@sihuiliang.com" 
           echo "------------- set npmrc ---------------"
-          npm config set //npm.pkg.github.com/:_authToken ${{secrets.RELEASE_TOKEN}}
-          echo "---------------- cofig ----------------"
+          echo "//npm.pkg.github.com/:_authToken=${{secrets.RELEASE_TOKEN}}" > ~/.npmrc
+          echo "---------------- config ----------------"
           npm config list
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
@@ -46,9 +46,14 @@ jobs:
           BRANCH_NAME=${{ inputs.branch }}
           COMMIT_HASH=$(git rev-parse --short HEAD)
           npm version prerelease --preid=${BRANCH_NAME}-${COMMIT_HASH}
+          echo "---------------- config ----------------"
+          npm config list
           npm publish
       - name: Run semantic-release
         if: inputs.branch == 'main' || inputs.branch == 'master'
         run: |
+          echo "---------------- config ----------------"
+          npm config list
           npx semantic-release
-       
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
