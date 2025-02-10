@@ -11,6 +11,10 @@ on:
     branches:
       - main
   workflow_call:
+    inputs:
+      branch:
+        type: string
+        required: true
 
 jobs:
   publish-gpr:
@@ -24,7 +28,20 @@ jobs:
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
+      - name: Run CI
+        run: npm ci
+      - name: Set user
+        run: |
+          git config --local user.email $(git log -1 --pretty=format:%an)
+          git config --local user.name ${GITHUB_ACTOR}
+      - name: Add suffix to version if not on main or master
+        if: inputs.branch != 'main' && inputs.branch != 'master'
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          npx semantic-release --branch "${{ inputs.branch }}-${COMMIT_HASH}" --prerelease
+      - name: Run semantic-release
+        if: inputs.branch == 'main' || inputs.branch == 'master'
+        run: |
+          npx semantic-release
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
