@@ -42,18 +42,12 @@ jobs:
           BRANCH_NAME=${{ inputs.branch }}
           COMMIT_HASH=$(git rev-parse --short HEAD)
           npm version prerelease --preid=${BRANCH_NAME}-${COMMIT_HASH}
-          echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > ~/.npmrc
-          echo "---------------- config ----------------"
-          npm config list
-          npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: Run semantic-release on main or master
+      - name: Run release on main or master
         if: inputs.branch == 'main' || inputs.branch == 'master'
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > ~/.npmrc
           echo "---------------- config ----------------"
           npm config list
-          npx semantic-release
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
