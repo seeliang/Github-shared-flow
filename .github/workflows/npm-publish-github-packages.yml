@@ -45,7 +45,7 @@ jobs:
         run: |
           BRANCH_NAME=${{ inputs.branch }}
           npm version prerelease --preid=${BRANCH_NAME}-${{inputs.commit_sha}}
-      - name: Run release on main or master
+      - name: Run release
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > ~/.npmrc
           echo "---------------- config ----------------"
