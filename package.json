@@ -4,8 +4,8 @@
     "description": "A shared flow for GitHub projects",
     "main": "index.js",
     "scripts": {
-        "ci": "echo \"ci triggered \" && exit 1",
-        "build": "echo \"build triggered\" && exit 1"
+        "ci": "echo \"ci triggered \" && exit 0",
+        "build": "echo \"build triggered\" && exit 0"
     },
     "repository": {
         "type": "git",
