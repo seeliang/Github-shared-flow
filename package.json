@@ -1,5 +1,5 @@
 {
-    "name": "github-shared-flow",
+    "name": "@seeliang/github-shared-flow-publish-test",
     "version": "1.0.0",
     "description": "A shared flow for GitHub projects",
     "main": "index.js",
