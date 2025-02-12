@@ -18,16 +18,13 @@ on:
       commit_sha:
         type: string
         required: true
-      
 
 jobs:
   publish-gpr:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,7 +36,7 @@ jobs:
       - name: Set Git user
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "hi@sihuiliang.com" 
+          git config --global user.email "hi@sihuiliang.com"
       - name: Add suffix to version on PR prerelease
         if: inputs.branch != 'main' && inputs.branch != 'master'
         run: |
@@ -47,7 +44,7 @@ jobs:
           npm version prerelease --preid=${BRANCH_NAME}-${{inputs.commit_sha}}-prerelease
       - name: Run release
         run: |
-          npm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN"
+          npm config set //npm.pkg.github.com/:_authToken ${{secrets.GITHUB_TOKEN}}
           echo "---------------- config ----------------"
           npm config list
           npm publish
