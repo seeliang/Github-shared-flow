@@ -37,8 +37,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          BRANCH_NAME=${{ inputs.branch }}
-          printenv
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
