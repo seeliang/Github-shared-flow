@@ -19,34 +19,42 @@ on:
         type: string
         required: true
 
+
 jobs:
-  publish-gpr:
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    permissions: write-all
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          node-version: 20
-          registry-url: https://npm.pkg.github.com/
-      - name: Run CI
-        run: npm run ci
-      - name: Set Git user
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        run: npm install
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: inputs.branch == 'master' || inputs.branch == 'main'
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "hi@sihuiliang.com"
-      - name: Add suffix to version on PR prerelease
-        if: inputs.branch != 'main' && inputs.branch != 'master'
+          npm config set //npm.pkg.github.com/:_authToken ${{secrets.GITHUB_TOKEN}}
+          echo "---------------- config ----------------"
+          npm config list
+          npx semantic-release          
+      - name: Add suffix to version on PR with prerelease
+        if: github.event_name == 'pull_request'
         run: |
+          git config --local user.email "github-actions[bot]@sihuiliang.com"
+          git config --local user.name "github-actions[bot]"
           BRANCH_NAME=${{ inputs.branch }}
           npm version prerelease --preid=${BRANCH_NAME}-${{inputs.commit_sha}}-prerelease
-      - name: Run release
-        run: |
           npm config set //npm.pkg.github.com/:_authToken ${{secrets.GITHUB_TOKEN}}
           echo "---------------- config ----------------"
           npm config list
           npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}    
