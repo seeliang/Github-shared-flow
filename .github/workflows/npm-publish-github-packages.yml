@@ -35,7 +35,9 @@ jobs:
         with:
           node-version: "lts/*"
       - name: Install dependencies
-        run: npm install && echo "${{inputs.branch}}"
+        run: |
+          npm install
+          echo "Branch: ${{ inputs.branch }}"
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
